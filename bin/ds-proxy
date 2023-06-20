@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+const fs = require('fs')
+const {join} = require('path')
+
+const config = require('rc')('ds-proxy', {
+  logfile: join(process.env.HOME, 'ds-proxy.log'),
+  dslite: '/opt/ti/uniflash/deskdb/content/TICloudAgent/linux/ccs_base/DebugServer/bin/DSLite',
+  port: 57777
+})
+const logStream = fs.createWriteStream(config.logfile, {flags:'a'})
+
+function log() {
+  const out = Array.from(arguments).join(' ')
+  logStream.write(`${out}\n`)
+}
+
+log('config', JSON.stringify(config, null, 2))
+
+require('..')(log, config, err=>{
+  if (err) {
+    console.error(err.message)
+    process.exit(1)
+  } else {
+    console.log(`{ "port" : ${config.port} }`)
+  }
+})

@@ -1,0 +1,23 @@
+{
+  "name": "dslite-proxy",
+  "version": "1.0.0",
+  "description": "A websocket proxy for TI's DebugServer",
+  "main": "index.js",
+  "bin": {
+    "ds-proxy": "bin/ds-proxy"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jan Bölsche <jan@lagomorph.de> (https://regular.codes/)",
+  "license": "ISC",
+  "dependencies": {
+    "bl": "^6.0.2",
+    "loner": "^1.0.0",
+    "multicb": "^1.2.2",
+    "once": "^1.4.0",
+    "rc": "^1.2.8",
+    "websocket": "^1.0.34"
+  }
+}
