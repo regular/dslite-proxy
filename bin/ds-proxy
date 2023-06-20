@@ -16,7 +16,9 @@ function log() {
 
 log('config', JSON.stringify(config, null, 2))
 
-require('..')(log, config, err=>{
+const opts = {}
+
+require('..')(log, config, opts, err=>{
   if (err) {
     console.error(err.message)
     process.exit(1)

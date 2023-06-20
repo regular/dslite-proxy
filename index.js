@@ -4,7 +4,7 @@ const bl = require('bl')
 const loner = require('loner')
 const mim = require('./websocket-mim')
 
-module.exports = function(log, config, cb) {
+module.exports = function(log, config, opts, cb) {
   const binpath = config.dslite
   const {dir, base} = parse(binpath)
   const PORT = 57777
@@ -34,7 +34,7 @@ module.exports = function(log, config, cb) {
         return cb(err)
       }
       const {port} = j
-      mim(log, config.port, port, cb) 
+      mim(log, config.port, port, opts, cb) 
       passthrough = true
     } else {
       l.push(data)
