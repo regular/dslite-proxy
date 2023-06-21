@@ -38,7 +38,7 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
   })
 
   log("connecting to DS: ", serverUrl)
-  wsClient.connect(serverUrl, null) // TODO: 2nd arg?
+  wsClient.connect(serverUrl, opts.subProtocol) 
 
   done( (err, port, dsConn) => {
     if (err) return cb(err)
@@ -114,6 +114,7 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
       }
       delete pending_submodules[response]
       const {port, subProtocol} = data
+      opts.subProtocol = subProtocol
       startServer(makeSubLog(log, name), port+1, port, opts, err=>{
         if (err) {
           log('ERROR creating submodule prixy', err.message)
