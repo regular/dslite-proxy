@@ -16,11 +16,18 @@ function log() {
 
 log('config', JSON.stringify(config, null, 2))
 
+process.on('uncaughtException', err=>{
+  console.error(err)
+  log(err, err.stack)
+  process.exit(1)
+})
+
 const opts = {}
 
 require('..')(log, config, opts, err=>{
   if (err) {
     console.error(err.message)
+    log(err.message, err.stack)
     process.exit(1)
   } else {
     console.log(`{ "port" : ${config.port} }`)
