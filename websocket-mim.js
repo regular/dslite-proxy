@@ -72,7 +72,6 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
             else {
               // TODO
               console.error(err.message, err.code)
-              process.exit(1)
             }
           })
         } else {
@@ -122,7 +121,15 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
         }
         log('new Endpoint', name, ' on port', port+1)
         if (opts.onNewEndpoint) {
-          opts.onNewEndpoint(name, port+1, subProtocol)
+          const args = opts.onNewEndpoint.length
+          if (args == 3) {
+            opts.onNewEndpoint(name, port+1, subProtocol)
+          } else if (args == 4) {
+            return opts.onNewEndpoint(name, port+1, subProtocol, (err, j2)=>{
+              if (err) return cb(err)
+              cb(null, Object.assign({}, j, j2))
+            })
+          }
         }
         j.data.port++
         cb(null, j)

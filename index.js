@@ -33,6 +33,7 @@ module.exports = function(log, config, opts, cb) {
       try { j = JSON.parse(bl(l).toString('utf8')) } catch(err) {
         return cb(err)
       }
+      log('dslite stdout', JSON.stringify(j))
       const {port} = j
       mim(log, config.port, port, opts, cb) 
       passthrough = true
