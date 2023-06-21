@@ -3,7 +3,7 @@ const fs = require('fs')
 const {join} = require('path')
 
 const config = require('rc')('ds-proxy', {
-  logfile: join(process.env.HOME, 'ds-proxy.log'),
+  logfile: join(process.env.HOME, 'dslite-proxy.log'),
   dslite: '/opt/ti/uniflash/deskdb/content/TICloudAgent/linux/ccs_base/DebugServer/bin/DSLite',
   port: 57777
 })

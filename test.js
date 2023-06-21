@@ -16,16 +16,16 @@ require('.')(log, config, opts, err=>{
   }
   const c = new client()
   c.on('connectFailed', err => {
-    log('connect to server failed:', err.message)
+    log('test.js: connect to server failed:', err.message)
   })
 
   c.on('connect', (conn) => {
-    log("Connected to server")
+    log("test.js: Connected to server")
     conn.on('message', msg => {
       if (msg.type === 'utf8') {
         const j = JSON.parse(msg.utf8Data)
         if (!j.event) {
-          log("message from server", j)
+          log("test.js: message from server", j)
         }
         if (j.response == 3) {
           const core = j.data.cores[0]
@@ -36,10 +36,10 @@ require('.')(log, config, opts, err=>{
           }))
         }
       } else if (msg.type === 'binary') {
-        log('binary message from server', {binaryLength: msg.binaryData.length})
-      } else log('unknown message type from dslite', msg.type)
+        log('test.js: binary message from server', {binaryLength: msg.binaryData.length})
+      } else log('test.js: unknown message type from dslite', msg.type)
     })
-    console.log('sending data')
+    console.log('test.js: sending data')
     conn.sendUTF(JSON.stringify({
       "command":"listCommands",
       "id":1,
@@ -58,7 +58,7 @@ require('.')(log, config, opts, err=>{
   })
 
   const serverUrl = 'ws://localhost:57777/'
-  log("connecting to server: ", serverUrl)
+  log("test.js: connecting to server: ", serverUrl)
   c.connect(serverUrl, null);
 
 })
@@ -67,16 +67,16 @@ require('.')(log, config, opts, err=>{
 function onNewEndpoint(name, port, subProtocol) {
   const c = new client()
   c.on('connectFailed', err => {
-    log('connect to server failed:', err.message)
+    log('test.js: connect to server failed:', err.message)
   })
 
   c.on('connect', (conn) => {
-    log("Connected to server")
+    log("test.js: Connected to server")
     conn.on('message', msg => {
       if (msg.type === 'utf8') {
         const j = JSON.parse(msg.utf8Data)
         if (!j.event) {
-          log("message from server", j)
+          log("test.js: message from server", j)
         }
       }
     })
@@ -92,6 +92,6 @@ function onNewEndpoint(name, port, subProtocol) {
     }))
   })
   const serverUrl = `ws://localhost:${port}/`
-  log("connecting to server: ", name, serverUrl)
+  log("test.js: connecting to server: ", name, serverUrl)
   c.connect(serverUrl, null);
 }
