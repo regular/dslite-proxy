@@ -3,6 +3,7 @@ const WSClient = require('websocket').client;
 const http = require('http');
 const multicb = require('multicb')
 const once = require('once')
+const formatEvent = require('./format-events')
 
 module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
   const serverUrl = `ws://localhost:${ds_port}/`
@@ -144,20 +145,6 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
 
 function formatMessage(j) {
   if (j.event) return formatEvent(j)
-  return JSON.stringify(j, null, 2)
-}
-
-function formatEvent(j) {
-  const {data, event} = j
-  if (event == 'gelOutput') {
-    return `${data.message}`
-  } else if (event == 'progress.update') {
-    const {isComplete, name, percent, subActivity, task} = data
-    return `(${isComplete?100:(percent||0)}%) ${subActivity} ${task?` / ${task}`:''} (${name})`
-  } else if (event=="statusMessage") {
-    const {message, type} = data
-    return `[${type}] ${message}`
-  }
   return JSON.stringify(j, null, 2)
 }
 
