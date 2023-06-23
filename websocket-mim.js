@@ -101,11 +101,6 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
 
     // Message headed towards Cloud IDE/tirun
     function toFront(j, cb) {
-      if (j.error !== undefined) {
-        const err = new Error(j.data.message)
-        err.code = j.error
-        return cb(err)
-      }
       log('DS->', formatMessage(j))
       const {data, response} = j
       const name = pending_submodules[response]
