@@ -121,16 +121,10 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
           return cb(err)
         }
         log('new Endpoint', name, ' on port', port+1)
-        if (opts.onNewEndpoint) {
-          const args = opts.onNewEndpoint.length
-          if (args == 3) {
-            opts.onNewEndpoint(name, port+1, subProtocol)
-          } else if (args == 4) {
-            return opts.onNewEndpoint(name, port+1, subProtocol, (err, j2)=>{
-              if (err) return cb(err)
-              cb(null, Object.assign({}, j, j2))
-            })
-          }
+        j.endpoint = {
+          name,
+          port: port + 1,
+          subProtocol
         }
         j.data.port++
         cb(null, j)
