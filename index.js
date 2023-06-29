@@ -6,16 +6,24 @@ const mim = require('./websocket-mim')
 const once = require('once')
 
 module.exports = function(log, config, opts, cb) {
+  opts = opts || {}
+  opts.argv = opts.argv || []
   cb = once(cb)
   const binpath = config.dslite
   const {dir, base} = parse(binpath)
   const PORT = 57777
 
   const l = []
-  const ds = spawn(binpath, opts.argv || [], {})
+  const ds = spawn(binpath, opts.argv, {})
 
-  ds.on('close', code=>{
-    log('DSLite exited with code', code)
+  function stop(_cb) {
+    // onClose will call this cb
+    if (_cb) cb = _cb
+    ds.kill('SIGhuP')
+  }
+
+  ds.on('close', (code, signal) =>{
+    log('DSLite exited with code', code, 'signal:', signal)
     if (code == 0) return cb(null, {stdout: l})
     cb(new Error(`DSLite exit code ${code}`))
   })
@@ -38,7 +46,12 @@ module.exports = function(log, config, opts, cb) {
         }
         log('dslite stdout', JSON.stringify(j))
         const {port} = j
-        mim(log, config.port, port, opts, cb) 
+        mim(log, config.port, port, opts, (err, res)=>{
+          if (err) return cb(err)
+          cb(null, Object.assign({}, res, {
+            stop
+          }))
+        }) 
         passthrough = true
       }
     } else {

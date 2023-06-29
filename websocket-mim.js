@@ -46,6 +46,11 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
       
     log(`ws proxy accapts cloud connections on ${port}`)
 
+    dsConn.on('close', (reasonCode, description) => {
+      log(' Backend ' + dsConn.remoteAddress + ' disconnected.', reasonCode, description)
+      httpd.close()
+    })
+
     wsServer.on('connect', (cloudConn) => {
       log('CloudConn accepted.', cloudConn.remoteAddress)
       cloudConn.on('close', (reasonCode, description) => {
