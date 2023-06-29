@@ -22,14 +22,20 @@ process.on('uncaughtException', err=>{
   process.exit(1)
 })
 
-const opts = {}
+const opts = {
+  argv: process.argv.slice(2)
+}
 
-require('..')(log, config, opts, err=>{
+require('..')(log, config, opts, (err, res)=>{
   if (err) {
     console.error(err.message)
-    log(err.message, err.stack)
+    log(err.stack)
     process.exit(1)
   } else {
-    console.log(`{ "port" : ${config.port} }`)
+    if (opts.argv.length == 0) {
+      console.log(`{ "port" : ${res.port} }`)
+    } else {
+      console.log(res.stdout.join('\n'))
+    }
   }
 })

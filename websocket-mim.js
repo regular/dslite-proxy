@@ -61,7 +61,7 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
       proxy(dsConn, cloudConn, toFront)
     })
 
-    cb(null)
+    cb(null, {port})
   })
 
   function proxy(connIn, connOut, onMsg) {
