@@ -43,7 +43,7 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
 
   done( (err, port, dsConn) => {
     if (err) return cb(err)
-      
+
     log(`ws proxy accapts cloud connections on ${port}`)
 
     dsConn.on('close', (reasonCode, description) => {
@@ -56,7 +56,7 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
       cloudConn.on('close', (reasonCode, description) => {
         log(' Peer ' + cloudConn.remoteAddress + ' disconnected.', reasonCode, description)
       })
-          
+
       /* Suubmodule support
       cloud->ds utf: {"command":"createSubModule","id":4,"data":["Texas Instruments XDS110 USB Debug Probe/Cortex_M3_0"]}
       ds->cloud utf: {"data":{"port":60431,"subProtocol":"2"},"response":4}
