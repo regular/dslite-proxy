@@ -1,4 +1,6 @@
 const formatters = {
+  "cio.output": ({data:{message, type}}) =>
+    `cio ${type}: ${message}`,
   "gelOutput": ({data:{message}})=>
     `GEL output: "${message}"`,
   "progress.update": ({data})=>

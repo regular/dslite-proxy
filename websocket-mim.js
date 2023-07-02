@@ -92,10 +92,28 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
 
   function makeMessageFilterPair(log) {
     const pending_submodules = {}
+    const nolog_responses = {}
+
+    function logCommand(j) {
+      const {command, id} = j
+      if (ary(opts.exclude_logging_command).includes(command)) {
+        nolog_responses[id] = true
+      } else {
+        log('IDE->', formatMessage(j))
+      }
+    }
+    function logResponse(j) {
+      const {response} = j
+      if (nolog_responses[response]) {
+        delete nolog_responses[response]
+      } else {
+        log('DS->', formatMessage(j))
+      }
+    }
 
     // Messages headed towards DebugServer
     function toBack(j, cb) {
-      log('IDE->', formatMessage(j))
+      logCommand(j)
       const {command, data, id} = j
       if (command == 'createSubModule') {
         const name = data[0].split('/').slice(-1)[0]
@@ -106,7 +124,7 @@ module.exports = function startServer(log, listen_port, ds_port, opts, cb) {
 
     // Message headed towards Cloud IDE/tirun
     function toFront(j, cb) {
-      log('DS->', formatMessage(j))
+      logResponse(j)
       const {data, response} = j
       const name = pending_submodules[response]
       if (name == undefined) {
@@ -150,3 +168,7 @@ function makeSubLog(mainlog, name) {
   }
 }
 
+function ary(x) {
+  if (Array.isArray(x)) return x
+  return [x]
+}

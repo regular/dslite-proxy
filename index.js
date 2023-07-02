@@ -8,6 +8,8 @@ const once = require('once')
 module.exports = function(log, config, opts, cb) {
   opts = opts || {}
   opts.argv = opts.argv || []
+  opts.exclude_logging_command=config.exclude_logging_command
+
   cb = once(cb)
   const binpath = config.dslite
   const {dir, base} = parse(binpath)
